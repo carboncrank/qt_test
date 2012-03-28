@@ -3,6 +3,9 @@ require 'Qt4'
 
 class MainWindow < Qt::Widget
   
+  slots 'on_toggled(bool)'
+  slots 'on_changed(QString)'
+  
   def initialize()
     super()
     
@@ -25,17 +28,40 @@ class MainWindow < Qt::Widget
     connect(closeButton, SIGNAL('clicked()'), $qApp, SLOT('quit()'))
 
  
-    listWindow = Qt::LineEdit.new
-    textWindow = Qt::TextEdit.new
+    listWindow = Qt::LineEdit.new self
+    connect(listWindow, SIGNAL('textChanged(QString)'),
+                        self, SLOT("on_changed(QString)"))
+    
 
-    gridLayout.addWidget listWindow, 0, 0, 1, 1
-    gridLayout.addWidget textWindow, 0, 1, 2, 2
-    gridLayout.addWidget closeButton, 2, 2
+    @typed = ""    
+    @textWindow = Qt::TextEdit.new self
+    @textWindow.text = @typed
+
+    gridLayout.addWidget listWindow, 0, 0
+    gridLayout.addWidget @textWindow, 0, 1, 2, 3
+    gridLayout.addWidget closeButton, 2, 3
+
+
+    # showText = Qt::CheckBox.new "OK", self
+    # connect(showText, SIGNAL("toggled(bool)"),
+    #         self, SLOT("on_toggled(bool)"))
+    # gridLayout.addWidget showText, 1, 0
     
   end
 
-  def closeButton()
-  end
+  def on_changed text
+        @textWindow.setText text
+        # @textWindow.adjustSize
+    end
+
+
+  # def on_toggled state
+  #   if state
+  #     setWindowTitle "Thank you"
+  #   else
+  #     setWindowTitle "Not selected"
+  #   end
+  # end
 
 end
 
