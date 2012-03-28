@@ -3,6 +3,6 @@ require 'Qt4'
 require './main_window.rb'
 
 app = Qt::Application.new(ARGV)
-win = MainWindow.new
-win.show()
+mainWindow = MainWindow.new
+mainWindow.show()
 app.exec()
